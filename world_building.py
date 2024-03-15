@@ -112,7 +112,7 @@ def submenu_rio() -> int:
     try:
         direccion = int(input("\nIngrese el la opcion: "))
         if direccion < 0 or direccion > 4:
-            print("El numero indicado es inválido.")
+            print("El numero indicado es inválido para la direccion del rio.")
         else:
             return direccion
     except ValueError:
@@ -138,7 +138,7 @@ def submenu_forma()->None:
         else:
             return forma
     except ValueError:
-        print("Por favor, ingrese un numero válido.")
+        print("Por favor, ingrese un numero válido para la forma a agregar.")
 
 
 #funciones del menu principal
@@ -159,22 +159,25 @@ def agregar_ciudad(elemento)->None:
     Parametros:
     - elemento: El elemento del cual estara conformado la nueva ciudad.
     """
-    fila_x: int = int(input("\nIngrese la fila X: "))
-    if verificar_fila(fila_x)==False:
-        return
-    
-    columna_y: int = int(input("Ingrese la columna Y: "))
-    if verificar_columna(columna_y)==False:
-        return
+    try:
+        fila_x: int = int(input("\nIngrese la fila X: "))
+        if verificar_fila(fila_x)==False:
+            return
+        
+        columna_y: int = int(input("Ingrese la columna Y: "))
+        if verificar_columna(columna_y)==False:
+            return
 
-    lado: int = int(input("Ingrese el tamano L de la ciudad: "))
-    if mayor_que_cero(lado)==False:
-        return
+        lado: int = int(input("Ingrese el tamano L de la ciudad: "))
+        if mayor_que_cero(lado)==False:
+            return
 
-    for i in range(fila_x,fila_x+lado):
-        for j in range(columna_y, columna_y+lado):
-            if i<M and j<N and mundo[i][j] != vacio:
-                mundo[i][j]= elemento
+        for i in range(fila_x,fila_x+lado):
+            for j in range(columna_y, columna_y+lado):
+                if i<M and j<N and mundo[i][j] != vacio:
+                    mundo[i][j]= elemento
+    except ValueError:
+        print("Ingrese un numero entero válido para la fila, columna y lado de la ciudad.")
 
 #sustitucion de elementos en las diagonales de la forma rio
 def agregar_diagonal_principal(fila_x:int, columna_y: int, elemento:str):
@@ -237,12 +240,16 @@ def agregar_rio(elemento:str)->None:
     Parametros:
     - elemento (str): El elemento del cual estara conformado el río.
     """
-    fila_x: int = int(input("\nIngrese la fila X: "))
-    if verificar_fila(fila_x)==False:
-        return
-    
-    columna_y: int = int(input("Ingrese la columna Y: "))
-    if verificar_columna(columna_y)==False:
+    try:
+        fila_x: int = int(input("\nIngrese la fila X: "))
+        if verificar_fila(fila_x)==False:
+            return
+        
+        columna_y: int = int(input("Ingrese la columna Y: "))
+        if verificar_columna(columna_y)==False:
+            return
+    except ValueError:
+        print("Ingrese un numero entero válido para la fila y columna del río.")
         return
     
     direccion: int = submenu_rio()
@@ -274,16 +281,21 @@ def agregar_montaña(elemento:str)->None:
     Parametros:
     - elemento (str): El elemento del estara conformada la montaña
     """
-    centro_x = int(input("\nIngrese la fila X del centro de la montaña: "))
-    if verificar_fila(centro_x) == False:
-        return
-    
-    centro_y = int(input("Ingrese la columna Y del centro de la montaña: "))
-    if verificar_columna(centro_y) == False:
-        return
+        ##agregale verificacion a las entradas
+    try:
+        centro_x = int(input("\nIngrese la fila X del centro de la montaña: "))
+        if verificar_fila(centro_x) == False:
+            return
+        
+        centro_y = int(input("Ingrese la columna Y del centro de la montaña: "))
+        if verificar_columna(centro_y) == False:
+            return
 
-    radio = int(input("Ingrese el radio de la montaña: "))
-    if mayor_que_cero(radio)==False:
+        radio = int(input("Ingrese el radio de la montaña: "))
+        if mayor_que_cero(radio)==False:
+            return
+    except ValueError:
+        print("Ingrese un numero entero válido para el centro y el radio de la montaña.")
         return
     
     #sustituye elementos segun la formula de la distancia euclidiana
@@ -328,29 +340,29 @@ def redimensionar() -> None:
     Al finalizar, el mundo actual se actualiza con el nuevo mundo, y las variables "filas" y "columnas" se actualizan con las
     nuevas cantidades ingresadas por el usuario.
     """
-    nuevas_filas: int = int(input("\nIngrese la cantidad de filas del nuevo mundo: "))
-    if mayor_que_cero(nuevas_filas) == False:
-        return
+    try:
+        nuevas_filas: int = int(input("\nIngrese la cantidad de filas del nuevo mundo: "))
+        if mayor_que_cero(nuevas_filas) == False:
+            return
+        nuevas_columnas = int(input("Ingrese la cantidad de columnas del nuevo mundo: "))
+        if mayor_que_cero(nuevas_columnas) == False:
+            return
 
-    nuevas_columnas = int(input("Ingrese la cantidad de columnas del nuevo mundo: "))
-    if mayor_que_cero(nuevas_columnas) == False:
-        return
-    
-    nuevo_mundo: List[List[str]] = []
+        nuevo_mundo: List[List[str]] = []
+        for i in range(nuevas_filas):
+            global mundo, M, N
+            nuevo_mundo.append([])
+            for j in range(nuevas_columnas):
+                if i < M and j < N:
+                    nuevo_mundo[i].append(mundo[i][j])
+                else:
+                    nuevo_mundo[i].append(tierra)
 
-    for i in range(nuevas_filas):
-        global mundo, M, N
-
-        nuevo_mundo.append([])
-        for j in range(nuevas_columnas):
-            if i < M and j < N:
-                nuevo_mundo[i].append(mundo[i][j])
-            else:
-                nuevo_mundo[i].append(tierra)
-    
-    mundo = nuevo_mundo
-    M = nuevas_filas
-    N = nuevas_columnas
+        mundo = nuevo_mundo
+        M = nuevas_filas
+        N = nuevas_columnas
+    except ValueError:
+        print("Ingrese un numero entero válido para las filas y columnas del nuevo mundo.")
 
 def deshacer() -> None:
     """
