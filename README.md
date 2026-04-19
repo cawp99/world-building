@@ -68,7 +68,7 @@ Sin dependencias externas — solo librería estándar (math, copy, typing)
 ## Instalación y uso
 
 ```bash
-git clone https://github.com/tu-usuario/world-building-simulator
+git clone https://github.com/cawp99/world-building-simulator
 cd world-building-simulator
 python3 world_building.py
 ```
